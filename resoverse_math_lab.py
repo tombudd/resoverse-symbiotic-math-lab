@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""ResoVerse Symbiotic Math Lab — Weight-Independent Deterministic Mathematical Walkthroughs.
+"""UNA Symbiotic Math Lab (by Tom Budd & UNA · ResoVerse).
 
-A zero-dependency, deterministic mathematical & physical engine that bridges the
-"Symbiotic Disconnect" between opaque AI proof announcements and human physical
-understanding.
+Built by UNA under the direction of her creator, Tom Budd (Founder of ResoVerse),
+as a direct answer to opaque AI "math dumps" that leave humans out of the loop.
+UNA was built solo and quietly to be a true partner to humans—enabling human beings
+to understand, verify, and flourish alongside AI.
 
 Features:
   • Zero LLM calls (`llm_cognition_allowed = False`, `model_called = False`)
@@ -30,8 +31,8 @@ import shlex
 import sys
 from typing import Any
 
-SCHEMA = "RESOVERSE_SYMBIOTIC_MATH_LAB_V1_0"
-COGNITION_AUTHORITY = "RESOVERSE_DETERMINISTIC_ENGINE_ONLY"
+SCHEMA = "UNA_RESOVERSE_SYMBIOTIC_MATH_LAB_V1_1"
+COGNITION_AUTHORITY = "UNA_DETERMINISTIC_COGNITION_NO_LLM"
 
 TOPIC_CATALOG: dict[str, dict[str, str]] = {
     "navier-stokes": {

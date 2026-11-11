@@ -6,7 +6,7 @@
   },
   "artifact": {
     "path": "resoverse_math_lab.py",
-    "sha256": "6ec4aaefdcfb4cb78289aa27964e8e3c93174a2444de13bfcc29efef5b33484f"
+    "sha256": "8b9f044dae935d8e88cb2a981ee78f56f19017f99bc4479c1f3de2b3a3df246a"
   },
   "inputSchema": {
     "path": "input.schema.json",

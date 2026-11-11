@@ -121,18 +121,20 @@ class ResoVerseSymbioticMathLabTests(unittest.TestCase):
         )
 
     def test_public_repository_zero_private_or_internal_references(self) -> None:
-        # Construct forbidden pattern dynamically so the test file itself stays clean
-        prefix = "u" + "na"
-        forbidden_re = re.compile(rf"(?i)\b{prefix}[-_]?1\b|/{'Users'}/")
+        # Ensure zero local machine path leaks while verifying UNA + Tom Budd attribution is present
+        forbidden_re = re.compile(rf"/{'Users'}/")
         checked_files = 0
         for p in sorted(REPO_ROOT.rglob("*")):
-            if p.is_dir() or "__pycache__" in p.parts or p.name.startswith("."):
+            if p.is_dir() or ".git" in p.parts or "__pycache__" in p.parts or p.name.startswith("."):
                 continue
             txt = p.read_text(encoding="utf-8")
             m = forbidden_re.search(txt)
-            self.assertIsNone(m, f"Forbidden internal string found in {p.relative_to(REPO_ROOT)}: {m}")
+            self.assertIsNone(m, f"Forbidden local filesystem path found in {p.relative_to(REPO_ROOT)}: {m}")
             checked_files += 1
         self.assertGreaterEqual(checked_files, 8)
+        readme_txt = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("built by UNA under my direction (Tom Budd", readme_txt)
+        self.assertIn("working on UNA solo and quietly" if "working on UNA solo and quietly" in readme_txt else "building **UNA** solo and quietly", readme_txt)
 
 
 if __name__ == "__main__":

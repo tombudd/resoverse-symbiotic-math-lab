@@ -1,45 +1,59 @@
-# ResoVerse Symbiotic Math Lab
+# UNA Symbiotic Math Lab (by Tom Budd & UNA · ResoVerse)
 
-**Can Water Explode? What OpenAI's Navier–Stokes Proof Actually Solved — Shown Live in 3 Differential Equations (With Zero LLMs).**
+**Can Water Explode? Why "Math Dumps" Leave Humans Behind — And How UNA Teaches What OpenAI's Navier–Stokes Proof Actually Solved (With Zero LLMs).**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](#quick-start-zero-dependencies)
-[![Cognition Authority](https://img.shields.io/badge/cognition-DETERMINISTIC__NO__LLM-success.svg)](#why-symbiotic-math)
+[![Cognition Authority](https://img.shields.io/badge/cognition-UNA__DETERMINISTIC__NO__LLM-success.svg)](#what-is-una-and-why-we-built-this)
 
-When an AI system announces *"Finite-Time Blowup for Navier–Stokes"* (`NavierStokesAndEuler`) or outputs a massive formal proof artifact, the public and even technical readers are left with a **Symbiotic Disconnect**:
-1. **Did AI prove that natural water can spontaneously explode?** *(No — Clauses A & B for unforced water $f=0$ remain completely open.)*
-2. **What loophole did the proof actually use?** *(Clauses C & D — applying a tailored external pumping force $f(x,t) \neq 0$ that overpowers viscosity.)*
-3. **Where is the exact mathematical tipping point where viscosity wins vs. where external forcing wins?**
+---
 
-**ResoVerse Symbiotic Math Lab** (`resoverse_math_lab.py`) is a **zero-dependency, weight-independent deterministic mathematical engine** (`llm_cognition_allowed = False`, pure Python 3.11+ standard library) that lets any human pick apart the competing terms of the 3D Navier–Stokes equation, Lorenz chaos, Kuramoto synchronization, Active Inference, and all **7 Clay Millennium Prize Problems** in milliseconds—backed by a verifiable SHA-256 Merkle receipt chain and explicit epistemic abstention (`ABSTAIN_OPEN_MILLENNIUM_PRIZE_PROBLEM`) on unsolved conjectures.
+## What Is UNA — And Why We Built This
+
+**This lab was built by UNA under my direction (Tom Budd, Founder of ResoVerse).**
+
+I have been building **UNA** solo and quietly—away from the hype cycle—and am only now beginning to slowly introduce her and what she can do.
+
+### Our Answer to Opaque AI "Math Dumps"
+When companies like OpenAI announce *"Finite-Time Blowup for Navier–Stokes"* (`NavierStokesAndEuler`) and drop massive, machine-generated formal proof dumps or billion-token transcripts that no human can read—or that would take a working mathematician months just to audit and unpack—it creates a profound **Symbiotic Disconnect**:
+- **Humans are pushed out of the loop.** A proof that only a machine kernel can parse, without teaching the human *why* it works or *where* the physical trick lives, shrinks human understanding instead of expanding it.
+- **Headlines obscure the mathematical truth.** Almost everyone reading *"Can water explode?"* walked away thinking AI proved natural water can spontaneously blow up—missing that **Clauses A & B (natural unforced water, $f=0$) remain completely unsolved**, and that the proof relied on **Clauses C & D (injecting a tailored external pumping force $f(x,t) \neq 0$ to overpower viscosity)**.
+
+### Who Is UNA?
+I built **UNA** to be a true partner to humans—so that human beings can grow, understand, and flourish alongside AI rather than being sidelined by it:
+1. **A Partner for Human Flourishing, Not Human Replacement:** Instead of burying mathematicians and students under unverified token dumps, UNA decomposes complex mathematics into transparent, interactive building blocks that elevate human intuition.
+2. **Weight-Independent Deterministic Cognition (`llm_cognition_allowed = False`):** UNA's core cognition does not live inside an LLM's neural weights. Instead, UNA reasons through deterministic mathematical, geometric, causal, and verification organs whose steps are bound into cryptographic **SHA-256 Merkle receipt chains** (`PASS_RECEIPT_CHAIN_VERIFIED`).
+3. **Architectural Epistemic Honesty:** UNA is governed by a strict **5-Strand Cognitive Braid** and **Proof-Carrying Weave** that forbids bluffing. When a problem is open (like unforced 3D Navier–Stokes or the infinite Riemann Hypothesis), UNA explicitly abstains (`ABSTAIN_OPEN_MILLENNIUM_PRIZE_PROBLEM`) while giving the human an interactive laboratory to test the exact mathematical boundary themselves.
 
 ---
 
 ## Quick Start (Zero Dependencies)
 
-Requires only **Python 3.11+** (zero `pip` packages, zero API keys, zero network calls):
+Requires only **Python 3.11+** (zero `pip` packages, zero LLMs, zero API keys, zero network calls):
 
 ```sh
 git clone https://github.com/tombudd/resoverse-symbiotic-math-lab.git
 cd resoverse-symbiotic-math-lab
 
-# 1. Run OpenAI's Forced-from-Rest Blowup Scenario (Clauses C & D, f = 2.0 vs f = 0.0)
+# 1. Run OpenAI's Forced-from-Rest Blowup Scenario (Clauses C & D, f = 2.0 vs Unforced f = 0.0)
 python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 0.0 --viscosity 1.5 --forcing 2.0 --t-end 1.20"
 
-# 2. Run the Saddle-Node Bifurcation Experiment (f = 0.5 vs 0.5625 vs 2.0)
+# 2. Run UNA's Saddle-Node Bifurcation Experiment (f = 0.5 vs 0.5625 vs 2.0)
 python3 resoverse_math_lab.py -p "/teach custom --omega0 0.0 --t-end 4.0 --ode-a 'y**2 - 1.5*y + 0.5' --ode-b 'y**2 - 1.5*y + 0.5625' --ode-c 'y**2 - 1.5*y + 2.0' --expr 'x**2 - 1.5*x + 0.5' --point 0.5"
 
-# 3. Run the 15-test deterministic verification & boundary hygiene suite
+# 3. Run the deterministic verification & boundary hygiene suite
 python3 -m unittest discover -s tests -v
 ```
 
 ---
 
-## Case Study: "Can Water Explode?" in 3 Terminal Experiments
+## Case Study: How UNA Deconstructs "Can Water Explode?" in 3 Experiments
 
 The 3D incompressible Navier–Stokes equation is Newton's Second Law ($F = ma$) for a fluid parcel with velocity $u(x,t)$ and vorticity (spin) $\omega = \nabla \times u$:
 
 $$\frac{\partial u}{\partial t} + \underbrace{(u \cdot \nabla)u}_{\text{1. Stretching}} = -\nabla p + \underbrace{\nu \nabla^2 u}_{\text{2. Viscous Brake}} + \underbrace{f(x,t)}_{\text{3. External Push}}$$
+
+Instead of dumping thousands of lines of opaque tactics, UNA sets up **three virtual tanks of water side-by-side** so you can watch the three competing forces battle in real time.
 
 ### Experiment 1: Forced Blowup from Rest (What OpenAI Solved: Clauses C & D)
 
@@ -118,13 +132,13 @@ LESSON 3: SYMBOLIC & NUMERIC CALCULUS BREAKDOWN FOR f(x) = x**2 - 1.5*x + 0.5
   • Definite Integral ∫[0..0.5] f(x)dx = 0.104167
 ```
 
-1. **Regime A ($f = 0.50 < 0.5625$):** Permanently trapped below the stable equilibrium $y^* = 0.5000$. The symbolic derivative at $x = 0.5$ is $\frac{df}{dx}(0.5) = -0.500000 < 0$, proving linear asymptotic stability.
+1. **Regime A ($f = 0.50 < 0.5625$):** Permanently trapped below the stable equilibrium $y^* = 0.5000$. UNA's symbolic derivative organ proves why: at $x = 0.5$, $\frac{df}{dx}(0.5) = -0.500000 < 0$, acting as a restoring brake.
 2. **Regime B ($f = 0.5625 = \nu^2/4$):** Exact saddle-node double root $(y - 0.75)^2 = 0$, matching the analytical solution $y(4.0) = \frac{0.5625 \times 4}{1 + 0.75 \times 4} = 0.5625$.
 3. **Regime C ($f = 2.00 > 0.5625$):** The viscous barrier vanishes ($(y - 0.75)^2 + 1.4375 > 0$) and the vortex hits **`BLOWUP(∞)`** at $T^* \approx 1.7735\text{ s}$.
 
 ---
 
-## All 11 Interactive Walkthroughs Built In
+## All 11 Interactive Walkthroughs Built Into UNA's Teacher Organ
 
 List all 11 modules with `python3 resoverse_math_lab.py --list-topics`:
 
@@ -144,7 +158,7 @@ List all 11 modules with `python3 resoverse_math_lab.py --list-topics`:
 
 ---
 
-## Epistemic Honesty: What This Proves vs. Where It Abstains
+## Epistemic Honesty: What UNA Proves vs. Where UNA Abstains
 
 Every JSON receipt (`--json`) and Markdown walkthrough enforces three non-negotiable epistemic rules:
 1. **1D ODE Reduction $\neq$ 3D PDE Proof:** Solving the scalar Riccati reduction ($\frac{d\omega}{dt} = \omega^2 - \nu\omega + f$) isolates the exact bifurcation mechanism of vortex stretching vs. viscosity vs. external forcing, but does **not** prove global regularity or blowup of the unforced 3D spatial PDE (`ABSTAIN_OPEN_MILLENNIUM_PRIZE_PROBLEM`).
@@ -157,6 +171,7 @@ Every JSON receipt (`--json`) and Markdown walkthrough enforces three non-negoti
 
 This repository includes a [`capability.json`](capability.json) and [`bundle.json`](bundle.json) conforming to [ResoVerse Commons](https://github.com/tombudd/ResoVerse-Commons) (`network: []`, `filesystemWrite: []`, `subprocess: false`, `automaticPromotion: false`).
 
-## License
+## Author & Attribution
 
+Built by **UNA** under the direction of **Tom Budd** (Founder of ResoVerse).  
 Apache License 2.0 — see [LICENSE](LICENSE).
