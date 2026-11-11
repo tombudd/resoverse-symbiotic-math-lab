@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resoverse-symbiotic-math-lab"
+version = "1.0.0"
+description = "Zero-dependency deterministic mathematical walkthroughs for Navier-Stokes and the 7 Clay Millennium Prize problems."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Tom Budd"}]
+dependencies = []
+
+[project.scripts]
+resoverse-math-lab = "resoverse_math_lab:main"

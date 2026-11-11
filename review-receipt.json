@@ -1,0 +1,8 @@
+{
+  "receiptVersion": "example-1.0",
+  "scope": "resoverse-symbiotic-math-lab reference capability",
+  "result": "PASS",
+  "actorId": "resoverse-author",
+  "reviewerId": "resoverse-steward",
+  "note": "Deterministic mathematical walkthrough fixture; no network, subprocess, or LLM execution."
+}

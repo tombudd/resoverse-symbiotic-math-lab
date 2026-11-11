@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0",
+  "id": "resoverse.commons.symbiotic-math-lab",
+  "version": "1.0.0",
+  "name": "ResoVerse Symbiotic Math Lab",
+  "description": "Zero-dependency deterministic mathematical walkthrough engine for 3D Navier-Stokes, saddle-node bifurcations, and the 7 Clay Millennium Prize problems without network, subprocess, or LLM access.",
+  "entrypoint": "resoverse_math_lab.py",
+  "dependencies": [],
+  "provenance": {
+    "sourceUrl": "https://github.com/tombudd/resoverse-symbiotic-math-lab",
+    "license": "Apache-2.0",
+    "authors": ["Tom Budd"],
+    "rightsToSubmit": true
+  },
+  "permissions": {
+    "network": [],
+    "filesystemRead": [],
+    "filesystemWrite": [],
+    "environment": [],
+    "subprocess": false
+  },
+  "limits": {
+    "wallTimeSeconds": 5,
+    "memoryMiB": 64
+  },
+  "learningUse": {
+    "allowedInputs": ["source_code", "evaluations", "counterexamples"],
+    "consent": "explicit_contribution",
+    "automaticPromotion": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "bundleVersion": "1.0",
+  "capabilityManifest": {
+    "path": "capability.json",
+    "sha256": "ab8c6f49a1df4687ea3dbd6fe63ecb6d68ba66f84fd505e3381936a2169d0ed9"
+  },
+  "artifact": {
+    "path": "resoverse_math_lab.py",
+    "sha256": "6ec4aaefdcfb4cb78289aa27964e8e3c93174a2444de13bfcc29efef5b33484f"
+  },
+  "inputSchema": {
+    "path": "input.schema.json",
+    "sha256": "a0311c353aec0c57946a8ca657370a474532175265455995160cfe83d8ce2b4f"
+  },
+  "outputSchema": {
+    "path": "output.schema.json",
+    "sha256": "746c22237c44891ae5a2e80edd907a6920d5a44c01a19d3f1af493a7c42144ce"
+  },
+  "compatibility": {
+    "protocol": "resoverse-commons",
+    "range": ">=0.2,<0.3"
+  },
+  "reviewEvidence": {
+    "path": "review-receipt.json",
+    "sha256": "bb688118efb41a44328cf09b7c7b0031f16761ce5138acecc1a99e86b6f917f7",
+    "actorId": "resoverse-author",
+    "reviewerId": "resoverse-steward"
+  }
+}
