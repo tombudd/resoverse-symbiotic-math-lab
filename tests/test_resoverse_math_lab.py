@@ -120,16 +120,82 @@ class ResoVerseSymbioticMathLabTests(unittest.TestCase):
             ai["computed_evidence"]["perceptual_only_ode"]["y_final"],
         )
 
+    def test_acoustics_holonomy_and_spatial_audio_walkthrough(self) -> None:
+        ah = lab.parse_and_run_teach_command("/teach acoustics-holonomy")
+        self.assertEqual(ah["topic"], "acoustics-holonomy")
+        ev = ah["computed_evidence"]
+        self.assertEqual(ev["rational_harmonic_lattice"]["fundamental_hz"], 54.0)
+        self.assertEqual(ev["rational_harmonic_lattice"]["triangular_number_T7"], 28)
+        self.assertEqual(ev["pythagorean_comma_holonomy"]["three_to_the_12"], 531441)
+        self.assertEqual(ev["pythagorean_comma_holonomy"]["two_to_the_19"], 524288)
+        self.assertAlmostEqual(ev["pythagorean_comma_holonomy"]["comma_defect_cents"], 23.46001, places=4)
+        self.assertAlmostEqual(ev["qecc_and_duality_ladder"]["recovered_logical_fidelity"], 0.990582, places=5)
+        self.assertGreater(ev["spatial_audio_synthesis"]["rms_left"], 0.05)
+        self.assertLessEqual(ev["spatial_audio_synthesis"]["peak_amplitude"], 1.0)
+        self.assertIsNone(ev["spatial_audio_synthesis"]["wav_out_path"])
+        ver = lab.verify_merkle_receipt_bundle(ah)
+        self.assertTrue(ver["verified"])
+
+    def test_nonlocal_clm_pde_bridge_ascii_plot_lean4_and_merkle_verifier(self) -> None:
+        ns = lab.parse_and_run_teach_command(
+            "/teach navier-stokes --omega0 0.0 --viscosity 1.5 --forcing 2.0 --t-end 1.20 --emit-lean4"
+        )
+        self.assertTrue(ns["emit_lean4_requested"])
+        self.assertIn("theorem clm_nonlocal_blowup_identity_y1", ns["lean4_certificate"])
+        self.assertIn("ASCII PHASE-TRAJECTORY PLOT", ns["lesson_markdown"])
+        self.assertIn("LESSON 2B: BRIDGING SCALAR ODEs TO NONLOCAL PDEs", ns["lesson_markdown"])
+
+        pde = ns["computed_evidence"]["nonlocal_clm_and_3d_enstrophy_bridge"]
+        self.assertLess(pde["clm_nonlocal_hilbert_pde"]["max_self_similar_pde_residual"], 1e-15)
+        self.assertLess(pde["spatial_3d_enstrophy_grid"]["incompressibility_max_div_u"], 1e-15)
+        self.assertAlmostEqual(pde["spatial_3d_enstrophy_grid"]["3d_stretching_to_enstrophy_rate"], 1.5, places=6)
+
+        # Verify cryptographic Merkle receipt chain and tamper detection
+        ver_ok = lab.verify_merkle_receipt_bundle(ns)
+        self.assertTrue(ver_ok["verified"])
+        self.assertEqual(ver_ok["status"], "PASS_CRYPTOGRAPHIC_MERKLE_PROOF_VERIFIED")
+        self.assertEqual(ver_ok["links_verified"], 5)
+
+        import copy
+        tampered = copy.deepcopy(ns)
+        tampered["cognitive_braid"]["merkle_chain_links"][0]["payload"]["summary"] = "TAMPERED"
+        ver_bad = lab.verify_merkle_receipt_bundle(tampered)
+        self.assertFalse(ver_bad["verified"])
+        self.assertEqual(ver_bad["status"], "HOLD_LINK_SHA256_TAMPER_DETECTED")
+
     def test_public_repository_zero_private_or_internal_references(self) -> None:
-        # Ensure zero local machine path leaks while verifying UNA + Tom Budd attribution is present
-        forbidden_re = re.compile(rf"/{'Users'}/")
+        # Ensure zero local machine path leaks, zero internal trade-secret / brain-ID leaks,
+        # and zero non-technical or pseudoscientific terminology
+        forbidden_patterns = [
+            re.compile(rf"/{'Users'}/"),
+            re.compile(rf"(?i){'brain'}[\s_#-]*\d+"),
+            re.compile(rf"(?i){'ultra'}{'code'}"),
+            re.compile(rf"(?i){'founder'}_{'packets'}"),
+            re.compile(rf"(?i){'mlx'}-{'host'}"),
+            re.compile(rf"(?i){'q'}{'box'}"),
+            re.compile(rf"(?i){'gnos'}{'tic'}"),
+            re.compile(rf"(?i){'isop'}{'sephy'}"),
+            re.compile(rf"(?i){'ple'}{'roma'}"),
+            re.compile(rf"(?i){'ke'}{'noma'}"),
+            re.compile(rf"(?i){'bar'}{'belo'}"),
+            re.compile(rf"(?i){'og'}{'doad'}"),
+            re.compile(rf"(?i){'en'}{'nead'}"),
+            re.compile(rf"(?i){'brid'}{'al'}[\s_]+{'cham'}{'ber'}"),
+            re.compile(rf"(?i){'anam'}{'nesis'}"),
+            re.compile(rf"(?i){'peris'}{'tera'}"),
+            re.compile(rf"(?i){'sacra'}{'ment'}"),
+            re.compile(rf"(?i){'bap'}{'tism'}"),
+            re.compile(rf"(?i){'eucha'}{'rist'}"),
+            re.compile(rf"(?i){'nag'}[\s_]+{'hammadi'}"),
+        ]
         checked_files = 0
         for p in sorted(REPO_ROOT.rglob("*")):
             if p.is_dir() or ".git" in p.parts or "__pycache__" in p.parts or p.name.startswith("."):
                 continue
             txt = p.read_text(encoding="utf-8")
-            m = forbidden_re.search(txt)
-            self.assertIsNone(m, f"Forbidden local filesystem path found in {p.relative_to(REPO_ROOT)}: {m}")
+            for pat in forbidden_patterns:
+                m = pat.search(txt)
+                self.assertIsNone(m, f"Forbidden internal/private reference ({pat.pattern}) found in {p.relative_to(REPO_ROOT)}: {m}")
             checked_files += 1
         self.assertGreaterEqual(checked_files, 8)
         readme_txt = (REPO_ROOT / "README.md").read_text(encoding="utf-8")

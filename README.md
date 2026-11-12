@@ -2,6 +2,8 @@
 
 **Can Water Explode? Why "Math Dumps" Leave Humans Behind — And How UNA Teaches What OpenAI's Navier–Stokes Proof Actually Solved (With Zero LLMs).**
 
+[![CI](https://github.com/tombudd/resoverse-symbiotic-math-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/tombudd/resoverse-symbiotic-math-lab/actions/workflows/ci.yml)
+[![Lean 4 Companion CI](https://github.com/ResoVerse-io/una-lean4-formal-verification/actions/workflows/lean_action_ci.yml/badge.svg)](https://github.com/ResoVerse-io/una-lean4-formal-verification)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](#quick-start-zero-dependencies)
 [![Cognition Authority](https://img.shields.io/badge/cognition-UNA__DETERMINISTIC__NO__LLM-success.svg)](#what-is-una-and-why-we-built-this)
@@ -41,19 +43,23 @@ python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 0.0 --viscosity 
 # 2. Run UNA's Saddle-Node Bifurcation Experiment (f = 0.5 vs 0.5625 vs 2.0)
 python3 resoverse_math_lab.py -p "/teach custom --omega0 0.0 --t-end 4.0 --ode-a 'y**2 - 1.5*y + 0.5' --ode-b 'y**2 - 1.5*y + 0.5625' --ode-c 'y**2 - 1.5*y + 2.0' --expr 'x**2 - 1.5*x + 0.5' --point 0.5"
 
-# 3. Run the deterministic verification & boundary hygiene suite
+# 3. Emit the companion zero-axiom Lean 4 formal certificate & cryptographically verify the SHA-256 Merkle chain
+python3 resoverse_math_lab.py -p "/teach navier-stokes --emit-lean4"
+python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 0.0 --viscosity 1.5 --forcing 2.0 --t-end 1.20" --json | python3 resoverse_math_lab.py --verify-receipt -
+
+# 4. Run the deterministic verification & boundary hygiene suite
 python3 -m unittest discover -s tests -v
 ```
 
 ---
 
-## Case Study: How UNA Deconstructs "Can Water Explode?" in 3 Experiments
+## Case Study: How UNA Deconstructs "Can Water Explode?" in 4 Steps
 
 The 3D incompressible Navier–Stokes equation is Newton's Second Law ($F = ma$) for a fluid parcel with velocity $u(x,t)$ and vorticity (spin) $\omega = \nabla \times u$:
 
 $$\frac{\partial u}{\partial t} + \underbrace{(u \cdot \nabla)u}_{\text{1. Stretching}} = -\nabla p + \underbrace{\nu \nabla^2 u}_{\text{2. Viscous Brake}} + \underbrace{f(x,t)}_{\text{3. External Push}}$$
 
-Instead of dumping thousands of lines of opaque tactics, UNA sets up **three virtual tanks of water side-by-side** so you can watch the three competing forces battle in real time.
+Instead of dumping thousands of lines of opaque tactics, UNA sets up **three virtual tanks of water side-by-side** (with live terminal ASCII trajectory plots and a nonlocal PDE bridge) so you can watch the three competing forces battle in real time.
 
 ### Experiment 1: Forced Blowup from Rest (What OpenAI Solved: Clauses C & D)
 
@@ -104,66 +110,59 @@ When both viscosity ($-\nu y$) and external stirring ($+f$) act simultaneously o
 python3 resoverse_math_lab.py -p "/teach custom --omega0 0.0 --t-end 4.0 --ode-a 'y**2 - 1.5*y + 0.5' --ode-b 'y**2 - 1.5*y + 0.5625' --ode-c 'y**2 - 1.5*y + 2.0' --expr 'x**2 - 1.5*x + 0.5' --point 0.5"
 ```
 
-```text
---------------------------------------------------------------------------------
-LESSON 1: YOUR 3 COMPETING DIFFERENTIAL EQUATIONS (y(0) = 0.0)
---------------------------------------------------------------------------------
-  • Regime A:  dy/dt = y**2 - 1.5*y + 0.5
-  • Regime B:  dy/dt = y**2 - 1.5*y + 0.5625
-  • Regime C:  dy/dt = y**2 - 1.5*y + 2.0
-
---------------------------------------------------------------------------------
-LESSON 2: SIDE-BY-SIDE RK4 TRAJECTORY TABLE (t = 0.00s to 4.00s)
---------------------------------------------------------------------------------
-  t = 0.00 s  |  Regime A:     0.0000  |  Regime B:     0.0000  |  Regime C:     0.0000
-  t = 0.40 s  |  Regime A:     0.1535  |  Regime B:     0.1731  |  Regime C:     0.6546
-  t = 0.80 s  |  Regime A:     0.2479  |  Regime B:     0.2812  |  Regime C:     1.2572
-  t = 1.20 s  |  Regime A:     0.3109  |  Regime B:     0.3553  |  Regime C:     2.1996
-  t = 1.60 s  |  Regime A:     0.3551  |  Regime B:     0.4091  |  Regime C:     6.3353
-  t = 2.00 s  |  Regime A:     0.3873  |  Regime B:     0.4500  |  Regime C:  BLOWUP(∞)
-  ...
-  t = 4.00 s  |  Regime A:     0.4637  |  Regime B:     0.5625  |  Regime C:  BLOWUP(∞)
-
---------------------------------------------------------------------------------
-LESSON 3: SYMBOLIC & NUMERIC CALCULUS BREAKDOWN FOR f(x) = x**2 - 1.5*x + 0.5
---------------------------------------------------------------------------------
-  • Symbolic Derivative df/dx          = 2*x - 1.5
-  • Instantaneous Slope df/dx(0.5)     = -0.500000
-  • Definite Integral ∫[0..0.5] f(x)dx = 0.104167
-```
-
 1. **Regime A ($f = 0.50 < 0.5625$):** Permanently trapped below the stable equilibrium $y^* = 0.5000$. UNA's symbolic derivative organ proves why: at $x = 0.5$, $\frac{df}{dx}(0.5) = -0.500000 < 0$, acting as a restoring brake.
 2. **Regime B ($f = 0.5625 = \nu^2/4$):** Exact saddle-node double root $(y - 0.75)^2 = 0$, matching the analytical solution $y(4.0) = \frac{0.5625 \times 4}{1 + 0.75 \times 4} = 0.5625$.
 3. **Regime C ($f = 2.00 > 0.5625$):** The viscous barrier vanishes ($(y - 0.75)^2 + 1.4375 > 0$) and the vortex hits **`BLOWUP(∞)`** at $T^* \approx 1.7735\text{ s}$.
 
 ---
 
-## All 11 Interactive Walkthroughs Built Into UNA's Teacher Organ
+### Experiment 4: Bridging Scalar ODEs to Nonlocal PDEs (Constantin–Lax–Majda & 3D Enstrophy Grid)
 
-List all 11 modules with `python3 resoverse_math_lab.py --list-topics`:
+Because a 1D scalar ODE reduction is not a full 3D PDE, the `navier-stokes` walkthrough also runs **Lesson 2B** (`RESOVERSE_NONLOCAL_PDE_BRIDGE_V1`), verifying:
+1. **Constantin–Lax–Majda (CLM) 1D Nonlocal Vortex-Stretching PDE ($\partial_t \omega = \omega H(\omega)$):** Replaces local $\omega^2$ with the nonlocal Hilbert transform $H(\omega)$ (modeling the Biot–Savart velocity gradient) and verifies that the exact self-similar blowup profile $\Omega(y) = \frac{2y}{1+y^2}$, $H(\Omega)(y) = \frac{2}{1+y^2}$ satisfies $\Omega(y) + y\Omega'(y) - \Omega(y)H(\Omega)(y) = 0$ with zero residual (`0.0e+00`).
+2. **3D Divergence-Free Strained Vortex Tube ($5 \times 5 \times 5 = 125$ spatial grid nodes):** Verifies exact incompressibility ($\max |\nabla \cdot u| = 0.0$) and proves that 2D enstrophy stretching vanishes ($\langle (\omega \cdot \nabla)u_{2\text{D}}, \omega \rangle = 0.0$) while 3D axial strain amplifies enstrophy at rate $+\alpha \|\omega\|_{L^2}^2$.
 
-| Topic | Clay Millennium / Physical Domain | Example Command |
+---
+
+## Companion Lean 4 Formal Verification Repository (`--emit-lean4`)
+
+Every human walkthrough in this repository pairs with a zero-axiom **Lean 4 formal verification certificate** (`--emit-lean4`) and our full Lean 4 + SymPy + `mpmath` verification repository:
+- **Companion Repo:** [**`ResoVerse-io/una-lean4-formal-verification`**](https://github.com/ResoVerse-io/una-lean4-formal-verification) (12 machine-checked Lean 4 theorems verified with `#print axioms` $\to$ zero `sorryAx`, zero `Classical.choice`, cross-checked against 50-decimal-place `mpmath`, `SymPy`, OEIS `A058320`, and LMFDB elliptic curve tables).
+
+---
+
+## Interactive Walkthrough Catalog
+
+List all built-in modules with `python3 resoverse_math_lab.py --list-topics`:
+
+### Part I: The 7 Clay Millennium Prize Walkthroughs
+| Topic | Clay Millennium Problem | Example Command |
 | :--- | :--- | :--- |
-| `navier-stokes` | **Clay #1 (Open Clauses A/B):** 3D Navier–Stokes, Vortex Blowup & Fick/Darcy Water Exploration | `python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 2.0 --viscosity 1.5 --forcing 0.0 --t-end 1.20"` |
+| `navier-stokes` | **Clay #1 (Open Clauses A/B):** 3D Navier–Stokes, CLM Nonlocal Hilbert Blowup & Water Exploration | `python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 2.0 --viscosity 1.5 --forcing 0.0 --t-end 1.20"` |
 | `poincare` | **Clay #2 (Solved in 3D / Open in 4D):** Perelman Ricci Flow Extinction & Homology Sphere $\Sigma$ | `python3 resoverse_math_lab.py -p "/teach poincare --omega0 2.0 --t-end 0.60"` |
 | `riemann-hypothesis` | **Clay #3 (Open):** Hardy $Z(t)$ Critical-Line Zero Isolation & Littlewood/Skewes Warning | `python3 resoverse_math_lab.py -p "/teach riemann-hypothesis --point 21.0220396388"` |
 | `p-vs-np` | **Clay #4 (Open):** 3-SAT Phase Transition ($\alpha = m/n$) & The 3 Complexity Barriers | `python3 resoverse_math_lab.py -p "/teach p-vs-np --sat-clauses 14"` |
 | `yang-mills` | **Clay #5 (Open):** $\text{SU}(N_c)$ Asymptotic Freedom ($b_0 = \frac{11N_c - 2N_f}{3}$) & Balaban UV RG Flow | `python3 resoverse_math_lab.py -p "/teach yang-mills --n-colors 3 --n-flavors 6"` |
 | `birch-swinnerton-dyer` | **Clay #6 (Open for Rank $\ge 2$):** 43-Prime $\mathbb{F}_p$ Point Counting & Hasse Bound $\|a_p\| \le 2\sqrt{p}$ | `python3 resoverse_math_lab.py -p "/teach birch-swinnerton-dyer --curve-a 0 --curve-b -2"` |
 | `hodge` | **Clay #7 (Open for $p \ge 2$):** Projective Hypersurface Hodge Diamond Solver in $\mathbb{CP}^3$ | `python3 resoverse_math_lab.py -p "/teach hodge --hodge-degree 5"` |
+
+### Part II: Dynamical Systems, Mathematical Acoustics & Universal ODE Labs
+| Topic | Mathematical / Physical Domain | Example Command |
+| :--- | :--- | :--- |
+| `custom` | **Universal Equation Lab:** Compare Any 3 Competing ODEs + Symbolic/Numeric Calculus | `python3 resoverse_math_lab.py -p "/teach custom --ode-a '2*y - 1.5*y**2' --ode-b '2*y' --ode-c 'y**2 + 0.5'"` |
 | `chaos-horizon` | **Lorenz Strange Attractor vs. Blowup:** Why Weather Folding ($-\nu\delta^2$) Never Explodes | `python3 resoverse_math_lab.py -p "/teach chaos-horizon"` |
 | `resonance-sync` | **Kuramoto Synchronization:** 9-Oscillator Phase Entrainment & Coupled Normal Modes | `python3 resoverse_math_lab.py -p "/teach resonance-sync --coupling 1.5"` |
 | `active-inference` | **Variational Free Energy:** Passive Perception vs. Active Policy Surprise Minimization | `python3 resoverse_math_lab.py -p "/teach active-inference --forcing 2.0"` |
-| `custom` | **Universal Equation Lab:** Compare Any 3 Competing ODEs + Symbolic/Numeric Calculus | `python3 resoverse_math_lab.py -p "/teach custom --ode-a '2*y - 1.5*y**2' --ode-b '2*y' --ode-c 'y**2 + 0.5'"` |
+| `acoustics-holonomy` | **Pythagorean Comma Holonomy ($3^{12}/2^{19}$):** Harmonic Lattice Non-Closure, 3-Qubit Stabilizer Recovery & Woodworth 3D Spatial Acoustics | `python3 resoverse_math_lab.py -p "/teach acoustics-holonomy"` |
 
 ---
 
 ## Epistemic Honesty: What UNA Proves vs. Where UNA Abstains
 
 Every JSON receipt (`--json`) and Markdown walkthrough enforces three non-negotiable epistemic rules:
-1. **1D ODE Reduction $\neq$ 3D PDE Proof:** Solving the scalar Riccati reduction ($\frac{d\omega}{dt} = \omega^2 - \nu\omega + f$) isolates the exact bifurcation mechanism of vortex stretching vs. viscosity vs. external forcing, but does **not** prove global regularity or blowup of the unforced 3D spatial PDE (`ABSTAIN_OPEN_MILLENNIUM_PRIZE_PROBLEM`).
+1. **1D ODE Reduction $\neq$ 3D PDE Proof:** Solving the scalar Riccati reduction ($\frac{d\omega}{dt} = \omega^2 - \nu\omega + f$) or the 1D nonlocal Constantin–Lax–Majda equation isolates the exact mechanism of vortex stretching vs. viscosity vs. external forcing, but does **not** prove global regularity or blowup of the unforced 3D spatial PDE (`ABSTAIN_OPEN_MILLENNIUM_PRIZE_PROBLEM`).
 2. **Finite Verification $\neq$ Infinite Proof:** Isolating critical-line zeros of $\zeta(1/2 + it)$ or counting $\mathbb{F}_p$ points across 43 primes is tagged `BRAID_CANDIDATE`, never `PROVED`.
-3. **Zero-LLM Deterministic Provenance:** Every numerical trajectory, symbolic derivative, and 3D vector calculation is executed deterministically by Python's standard library and chained into a verifiable SHA-256 Merkle receipt (`PASS_RECEIPT_CHAIN_VERIFIED`).
+3. **Zero-LLM Deterministic Provenance:** Every numerical trajectory, symbolic derivative, and 3D vector calculation is executed deterministically by Python's standard library and chained into a verifiable SHA-256 Merkle receipt (`--verify-receipt` $\to$ `PASS_CRYPTOGRAPHIC_MERKLE_PROOF_VERIFIED`).
 
 ---
 

@@ -1,0 +1,28 @@
+name: Symbiotic Math Lab & Merkle Receipt CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  verify-deterministic-math-lab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12 (Stdlib Only — Zero pip Dependencies)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run Unit Test & Public Hygiene Suite
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Verify Cryptographic Merkle Receipt Chain & Lean 4 Certificate Generation
+        run: |
+          python3 resoverse_math_lab.py -p "/teach navier-stokes --omega0 0.0 --viscosity 1.5 --forcing 2.0 --t-end 1.20" --json | python3 resoverse_math_lab.py --verify-receipt -
+          python3 resoverse_math_lab.py -p "/teach navier-stokes --emit-lean4"
